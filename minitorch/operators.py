@@ -11,51 +11,142 @@ from typing import Callable, Iterable
 
 
 def mul(x: float, y: float) -> float:
-    "$f(x, y) = x * y$"
-    # TODO: Implement for Task 0.1.
-    raise NotImplementedError("Need to implement for Task 0.1")
+    """
+    Multiply two numbers.
+
+    This function takes two floating-point numbers and returns their product.
+    It demonstrates a basic arithmetic operation implemented as a function.
+
+    Args:
+        x (float): The first number.
+        y (float): The second number.
+
+    Returns:
+        float: The product of x and y.
+    """
+    return x * y
 
 
 def id(x: float) -> float:
-    "$f(x) = x$"
-    # TODO: Implement for Task 0.1.
-    raise NotImplementedError("Need to implement for Task 0.1")
+    """
+    Return the input without any modification.
+
+    This identity function demonstrates the simplest form of a function
+    that returns exactly what it receives. It's often used for demonstrations
+    and as a placeholder in computational graphs or during testing.
+
+    Args:
+        x (float): A numeric value.
+
+    Returns:
+        float: The same numeric value passed as input.
+    """
+    return x
 
 
 def add(x: float, y: float) -> float:
-    "$f(x, y) = x + y$"
-    # TODO: Implement for Task 0.1.
-    raise NotImplementedError("Need to implement for Task 0.1")
+    """
+    Add two numbers.
+
+    This function takes two floating-point numbers and returns their sum. It
+    demonstrates a basic arithmetic operation.
+
+    Args:
+        x (float): The first number to add.
+        y (float): The second number to add.
+
+    Returns:
+        float: The sum of x and y.
+    """
+    return x + y
 
 
 def neg(x: float) -> float:
-    "$f(x) = -x$"
-    # TODO: Implement for Task 0.1.
-    raise NotImplementedError("Need to implement for Task 0.1")
+    """
+    Negate the input value.
+
+    This function returns the negative of the given floating-point number. It is
+    a straightforward arithmetic operation that changes the sign of the number.
+
+    Args:
+        x (float): The number to negate.
+
+    Returns:
+        float: The negated value of x.
+    """
+    return -x
 
 
 def lt(x: float, y: float) -> float:
-    "$f(x) =$ 1.0 if x is less than y else 0.0"
-    # TODO: Implement for Task 0.1.
-    raise NotImplementedError("Need to implement for Task 0.1")
+    """
+    Determine if one number is less than another.
+
+    This function compares two floating-point numbers and returns 1.0 if the first
+    number is less than the second number, and 0.0 otherwise. It's used to perform
+    element-wise comparisons in vectorized operations.
+
+    Args:
+        x (float): The first number to compare.
+        y (float): The second number to compare against.
+
+    Returns:
+        float: 1.0 if x is less than y, otherwise 0.0.
+    """
+    return 1.0 if x < y else 0.0
 
 
 def eq(x: float, y: float) -> float:
-    "$f(x) =$ 1.0 if x is equal to y else 0.0"
-    # TODO: Implement for Task 0.1.
-    raise NotImplementedError("Need to implement for Task 0.1")
+    """
+    Determine if two numbers are equal.
+
+    This function compares two floating-point numbers and returns 1.0 if they are equal,
+    and 0.0 otherwise. It is useful for element-wise equality checks in numerical computations.
+
+    Args:
+        x (float): The first number to compare.
+        y (float): The second number to compare.
+
+    Returns:
+        float: 1.0 if x is equal to y, otherwise 0.0.
+    """
+    return 1.0 if x == y else 0.0
 
 
 def max(x: float, y: float) -> float:
-    "$f(x) =$ x if x is greater than y else y"
-    # TODO: Implement for Task 0.1.
-    raise NotImplementedError("Need to implement for Task 0.1")
+    """
+    Return the maximum of two numbers.
+
+    This function compares two floating-point numbers and returns the larger of the two.
+    It is a fundamental operation used in various numerical and data processing tasks
+    to determine the greater value between two operands.
+
+    Args:
+        x (float): The first number to compare.
+        y (float): The second number to compare.
+
+    Returns:
+        float: The greater number between x and y.
+    """
+    return x if x > y else y
 
 
-def is_close(x: float, y: float) -> float:
-    "$f(x) = |x - y| < 1e-2$"
-    # TODO: Implement for Task 0.1.
-    raise NotImplementedError("Need to implement for Task 0.1")
+def is_close(x: float, y: float) -> bool:
+    """
+    Determine if two numbers are approximately equal to each other within a small tolerance.
+
+    This function evaluates the absolute difference between two floating-point numbers
+    and checks if it is less than a specified tolerance level (0.01). It is typically used
+    in situations where floating-point precision might lead to small discrepancies in
+    calculations, making exact comparison impractical.
+
+    Args:
+        x (float): The first number.
+        y (float): The second number.
+
+    Returns:
+        bool: True if the difference between x and y is less than 0.01, else False.
+    """
+    return abs(x - y) < 0.01
 
 
 def sigmoid(x: float) -> float:
@@ -113,9 +204,25 @@ def log_back(x: float, d: float) -> float:
 
 
 def inv(x: float) -> float:
-    "$f(x) = 1/x$"
-    # TODO: Implement for Task 0.1.
-    raise NotImplementedError("Need to implement for Task 0.1")
+    """
+    Calculate the reciprocal of a number.
+
+    This function returns the reciprocal of the given floating-point number. It handles
+    the basic arithmetic operation of finding the inverse of a number, which is useful
+    in various mathematical computations.
+
+    Args:
+        x (float): The number to find the reciprocal of.
+
+    Returns:
+        float: The reciprocal of x.
+
+    Raises:
+        ValueError: If x is zero, as division by zero is undefined.
+    """
+    if x == 0:
+        raise ValueError("Division by zero is undefined.")
+    return 1 / x
 
 
 def inv_back(x: float, d: float) -> float:
@@ -125,9 +232,22 @@ def inv_back(x: float, d: float) -> float:
 
 
 def relu_back(x: float, d: float) -> float:
-    r"If $f = relu$ compute $d \times f'(x)$"
-    # TODO: Implement for Task 0.1.
-    raise NotImplementedError("Need to implement for Task 0.1")
+    """
+    Compute the gradient of the ReLU function for backpropagation.
+
+    This function calculates the derivative of the ReLU activation function
+    applied to an input x, scaled by the gradient of the loss with respect to
+    the output of the ReLU function (d). This is essential for the backpropagation
+    process in neural networks to update the weights.
+
+    Args:
+        x (float): The input value to the ReLU function.
+        d (float): The upstream gradient.
+
+    Returns:
+        float: The gradient of ReLU with respect to input x, scaled by d.
+    """
+    return d * (1 if x > 0 else 0)
 
 
 # ## Task 0.3
