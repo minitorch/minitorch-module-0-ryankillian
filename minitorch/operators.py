@@ -76,12 +76,21 @@ def sigmoid(x: float) -> float:
 
 def relu(x: float) -> float:
     """
-    $f(x) =$ x if x is greater than 0, else 0
+    Apply the rectified linear unit function.
 
-    (See https://en.wikipedia.org/wiki/Rectifier_(neural_networks) .)
+    This function returns x if x is greater than zero, otherwise it returns zero.
+    It is commonly used as an activation function in neural networks.
+
+    Args:
+        x (float): The input value.
+
+    Returns:
+        float: The output of the ReLU function.
+
+    See Also:
+        https://en.wikipedia.org/wiki/Rectifier_(neural_networks)
     """
-    # TODO: Implement for Task 0.1.
-    raise NotImplementedError("Need to implement for Task 0.1")
+    return x if x > 0 else 0
 
 
 EPS = 1e-6
