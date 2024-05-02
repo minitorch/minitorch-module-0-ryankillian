@@ -316,79 +316,123 @@ def relu_back(x: float, d: float) -> float:
 
 def map(fn: Callable[[float], float]) -> Callable[[Iterable[float]], Iterable[float]]:
     """
-    Higher-order map.
-
-    See https://en.wikipedia.org/wiki/Map_(higher-order_function)
+    Higher-order map function that applies a given function `fn` to each element
+    in an iterable of floats and returns a new list with the results.
 
     Args:
-        fn: Function from one value to one value.
+        fn (Callable[[float], float]): A function that takes a float and returns a float.
 
     Returns:
-        A function that takes a list, applies `fn` to each element, and returns a
-         new list
+        Callable[[Iterable[float]], Iterable[float]]: A function that takes an iterable of floats,
+        applies `fn` to each element, and returns a new list with the results.
     """
-    # TODO: Implement for Task 0.3.
-    raise NotImplementedError("Need to implement for Task 0.3")
+
+    def apply_map(values: Iterable[float]) -> Iterable[float]:
+        return [fn(value) for value in values]
+
+    return apply_map
 
 
 def negList(ls: Iterable[float]) -> Iterable[float]:
-    "Use `map` and `neg` to negate each element in `ls`"
-    # TODO: Implement for Task 0.3.
-    raise NotImplementedError("Need to implement for Task 0.3")
+    """
+    Use `map` and `neg` to negate each element in `ls`.
+
+    Args:
+        ls (Iterable[float]): An iterable of floating-point numbers.
+
+    Returns:
+        Iterable[float]: An iterable of floating-point numbers where each element is the negation of the corresponding element in `ls`.
+    """
+    neg_map = map(neg)  # Get the mapping function for negation
+    return neg_map(ls)  # Apply it to the list and return the new list
 
 
 def zipWith(
     fn: Callable[[float, float], float]
 ) -> Callable[[Iterable[float], Iterable[float]], Iterable[float]]:
     """
-    Higher-order zipwith (or map2).
-
-    See https://en.wikipedia.org/wiki/Map_(higher-order_function)
+    Create a function that applies a binary function element-wise to two lists.
 
     Args:
-        fn: combine two values
+        fn (Callable[[float, float], float]): A function that takes two floats and returns a float.
 
     Returns:
-        Function that takes two equally sized lists `ls1` and `ls2`, produce a new list by
-         applying fn(x, y) on each pair of elements.
-
+        Callable[[Iterable[float], Iterable[float]], Iterable[float]]: A function that takes two iterables of floats,
+        applies `fn` to each pair of elements, and returns a new list containing the results of those applications.
     """
-    # TODO: Implement for Task 0.3.
-    raise NotImplementedError("Need to implement for Task 0.3")
+
+    def apply_zipWith(ls1: Iterable[float], ls2: Iterable[float]) -> Iterable[float]:
+        # Use the built-in zip function to pair elements from both lists and apply `fn` to each pair
+        return [fn(x, y) for x, y in zip(ls1, ls2)]
+
+    return apply_zipWith
 
 
 def addLists(ls1: Iterable[float], ls2: Iterable[float]) -> Iterable[float]:
-    "Add the elements of `ls1` and `ls2` using `zipWith` and `add`"
-    # TODO: Implement for Task 0.3.
-    raise NotImplementedError("Need to implement for Task 0.3")
+    """
+    Add the elements of `ls1` and `ls2` using `zipWith` and `add`.
+
+    Args:
+        ls1 (Iterable[float]): First list of floats.
+        ls2 (Iterable[float]): Second list of floats.
+
+    Returns:
+        Iterable[float]: A list containing the element-wise sum of `ls1` and `ls2`.
+    """
+    # You can directly return the result of invoking zipWith(add) on ls1 and ls2
+    return zipWith(add)(ls1, ls2)
 
 
 def reduce(
     fn: Callable[[float, float], float], start: float
 ) -> Callable[[Iterable[float]], float]:
-    r"""
-    Higher-order reduce.
+    """
+    Create a higher-order function for reduction. This function will apply a binary function
+    recursively to combine all elements in a list starting from an initial value.
 
     Args:
-        fn: combine two values
-        start: start value $x_0$
+        fn (Callable[[float, float], float]): A binary function that takes two floats and returns a float.
+        start (float): The initial value to start the reduction.
 
     Returns:
-        Function that takes a list `ls` of elements
-         $x_1 \ldots x_n$ and computes the reduction :math:`fn(x_3, fn(x_2,
-         fn(x_1, x_0)))`
+        Callable[[Iterable[float]], float]: A function that when given a list of floats,
+        reduces them into a single float using the binary function `fn` starting from `start`.
     """
-    # TODO: Implement for Task 0.3.
-    raise NotImplementedError("Need to implement for Task 0.3")
+
+    def apply_reduce(ls: Iterable[float]) -> float:
+        result = start
+        for value in ls:
+            result = fn(result, value)
+        return result
+
+    return apply_reduce
 
 
 def sum(ls: Iterable[float]) -> float:
-    "Sum up a list using `reduce` and `add`."
-    # TODO: Implement for Task 0.3.
-    raise NotImplementedError("Need to implement for Task 0.3")
+    """
+    Sum up a list using `reduce` and `add`.
+
+    Args:
+        ls (Iterable[float]): List of numbers to sum.
+
+    Returns:
+        float: The total sum of all numbers in the list.
+    """
+    # Create a reduce function for addition starting from 0
+    sum_reduce = reduce(add, 0)
+    return sum_reduce(ls)
 
 
 def prod(ls: Iterable[float]) -> float:
-    "Product of a list using `reduce` and `mul`."
-    # TODO: Implement for Task 0.3.
-    raise NotImplementedError("Need to implement for Task 0.3")
+    """
+    Calculate the product of a list using `reduce` and `mul`.
+
+    Args:
+        ls (Iterable[float]): List of numbers to multiply.
+
+    Returns:
+        float: The product of all numbers in the list.
+    """
+    # Create a reduce function for multiplication, starting from 1 (the identity for multiplication)
+    product_reduce = reduce(mul, 1)
+    return product_reduce(ls)

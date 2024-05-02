@@ -2,7 +2,6 @@ from typing import Callable, List, Tuple
 
 import pytest
 from hypothesis import given
-from hypothesis import strategies as st
 from hypothesis.strategies import lists
 
 from minitorch import MathTest
@@ -102,7 +101,7 @@ def test_eq(a: float) -> None:
 
 @pytest.mark.task0_2
 @given(small_floats)
-def test_sigmoid(a: float):
+def test_sigmoid(a: float) -> None:
     """
     Check properties of the sigmoid function, specifically:
     * It is always between 0.0 and 1.0.
@@ -119,11 +118,15 @@ def test_sigmoid(a: float):
     assert 0.0 <= sigmoid_a <= 1.0, "Sigmoid output should be within [0, 1]"
 
     # One minus sigmoid(a) is the same as sigmoid of the negative (-a).
-    assert abs((1.0 - sigmoid_a) - sigmoid_neg_a) < 1e-7, "One minus sigmoid(a) should equal sigmoid(-a)"
+    assert (
+        abs((1.0 - sigmoid_a) - sigmoid_neg_a) < 1e-7
+    ), "One minus sigmoid(a) should equal sigmoid(-a)"
 
     # Ensure it is strictly increasing by comparing two points
     sigmoid_a_plus = sigmoid(a + 1e-5)  # a small increment to compare increase
-    assert sigmoid_a_plus >= sigmoid_a or is_close(sigmoid_a_plus, sigmoid_a), "Sigmoid should be strictly increasing from a to a + 1e-5"
+    assert sigmoid_a_plus >= sigmoid_a or is_close(
+        sigmoid_a_plus, sigmoid_a
+    ), "Sigmoid should be strictly increasing from a to a + 1e-5"
 
 
 @pytest.mark.task0_2
@@ -226,8 +229,18 @@ def test_sum_distribute(ls1: List[float], ls2: List[float]) -> None:
     Write a test that ensures that the sum of `ls1` plus the sum of `ls2`
     is the same as the sum of each element of `ls1` plus each element of `ls2`.
     """
-    # TODO: Implement for Task 0.3.
-    raise NotImplementedError("Need to implement for Task 0.3")
+    # Calculate the sum of each list individually
+    sum_ls1 = sum(ls1)
+    sum_ls2 = sum(ls2)
+
+    # Calculate the sum of both lists together
+    combined_list_sum = sum(addLists(ls1, ls2))
+
+    # Assert the sum of sums is equal to the sum of the combined elements
+    assert is_close(sum_ls1 + sum_ls2, combined_list_sum), (
+        f"Expected the sum of individual sums ({sum_ls1} + {sum_ls2}) to be equal to "
+        f"the sum of combined elements ({combined_list_sum})"
+    )
 
 
 @pytest.mark.task0_3
