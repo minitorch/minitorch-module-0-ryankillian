@@ -150,19 +150,29 @@ def is_close(x: float, y: float) -> bool:
 
 
 def sigmoid(x: float) -> float:
-    r"""
-    $f(x) =  \frac{1.0}{(1.0 + e^{-x})}$
-
-    (See https://en.wikipedia.org/wiki/Sigmoid_function )
-
-    Calculate as
-
-    $f(x) =  \frac{1.0}{(1.0 + e^{-x})}$ if x >=0 else $\frac{e^x}{(1.0 + e^{x})}$
-
-    for stability.
     """
-    # TODO: Implement for Task 0.1.
-    raise NotImplementedError("Need to implement for Task 0.1")
+    Compute the sigmoid activation function for a given input.
+
+    The sigmoid function is defined as f(x) = 1 / (1 + exp(-x)). It maps any real-valued number
+    to the (0, 1) interval, making it useful for tasks like binary classification. For stability
+    in computation, especially to avoid overflow in exponential calculations, this implementation
+    uses an alternative form for negative inputs: f(x) = exp(x) / (1 + exp(x)).
+
+    Args:
+        x (float): The input value to the sigmoid function.
+
+    Returns:
+        float: The output of the sigmoid function, ranging from 0 to 1.
+
+    See Also:
+        For more information on the sigmoid function, visit:
+        https://en.wikipedia.org/wiki/Sigmoid_function
+    """
+    if x >= 0:
+        return 1.0 / (1.0 + math.exp(-x))
+    else:
+        exp_x = math.exp(x)
+        return exp_x / (1.0 + exp_x)
 
 
 def relu(x: float) -> float:
@@ -188,7 +198,20 @@ EPS = 1e-6
 
 
 def log(x: float) -> float:
-    "$f(x) = log(x)$"
+    """
+    Compute the natural logarithm of a number, adjusted by a small constant for stability.
+
+    This function calculates the natural logarithm (base e) of the input value. To enhance
+    numerical stability and avoid a domain error (logarithm of zero), a small positive constant
+    (EPS) is added to the input. This adjustment is crucial when dealing with very small or zero
+    values which are common in various computational scenarios.
+
+    Args:
+        x (float): The input value for which the logarithm is to be calculated.
+
+    Returns:
+        float: The natural logarithm of `x + EPS`.
+    """
     return math.log(x + EPS)
 
 
@@ -198,9 +221,27 @@ def exp(x: float) -> float:
 
 
 def log_back(x: float, d: float) -> float:
-    r"If $f = log$ as above, compute $d \times f'(x)$"
-    # TODO: Implement for Task 0.1.
-    raise NotImplementedError("Need to implement for Task 0.1")
+    """
+    Compute the gradient of the natural logarithm function for backpropagation.
+
+    This function calculates the derivative of the natural logarithm function (log(x))
+    with respect to x, which is 1/x. It then multiplies this derivative by the upstream
+    gradient 'd', which is a common step in the backpropagation algorithm used in
+    training neural networks.
+
+    Args:
+        x (float): The input value to the logarithm function. Must be positive to avoid a division by zero.
+        d (float): The upstream gradient passed from the next layer or the loss gradient.
+
+    Returns:
+        float: The result of multiplying the derivative of log(x) by d, effectively d/x.
+
+    Raises:
+        ValueError: If x is less than or equal to zero, as log(x) is not defined for non-positive values.
+    """
+    if x <= 0:
+        raise ValueError("log(x) is not defined for non-positive values.")
+    return d / x
 
 
 def inv(x: float) -> float:
@@ -226,9 +267,27 @@ def inv(x: float) -> float:
 
 
 def inv_back(x: float, d: float) -> float:
-    r"If $f(x) = 1/x$ compute $d \times f'(x)$"
-    # TODO: Implement for Task 0.1.
-    raise NotImplementedError("Need to implement for Task 0.1")
+    """
+    Compute the gradient of the reciprocal function for backpropagation.
+
+    This function calculates the derivative of the reciprocal function (1/x)
+    with respect to x, which is -1/x^2. It then multiplies this derivative by the
+    upstream gradient 'd', a common step in the backpropagation algorithm used in
+    training neural networks to propagate gradients.
+
+    Args:
+        x (float): The input value to the reciprocal function. Must be non-zero to avoid division by zero.
+        d (float): The upstream gradient passed from the next layer or the loss gradient.
+
+    Returns:
+        float: The result of multiplying the derivative of 1/x by d, effectively -d/x^2.
+
+    Raises:
+        ValueError: If x is zero, as division by zero results in an undefined derivative.
+    """
+    if x == 0:
+        raise ValueError("Division by zero is undefined.")
+    return -d / (x * x)
 
 
 def relu_back(x: float, d: float) -> float:

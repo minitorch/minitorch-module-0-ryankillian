@@ -2,6 +2,7 @@ from typing import Callable, List, Tuple
 
 import pytest
 from hypothesis import given
+from hypothesis import strategies as st
 from hypothesis.strategies import lists
 
 from minitorch import MathTest
@@ -12,6 +13,7 @@ from minitorch.operators import (
     id,
     inv,
     inv_back,
+    is_close,
     log_back,
     lt,
     max,
@@ -21,6 +23,7 @@ from minitorch.operators import (
     prod,
     relu,
     relu_back,
+    sigmoid,
     sum,
 )
 
@@ -98,53 +101,113 @@ def test_eq(a: float) -> None:
 
 
 @pytest.mark.task0_2
-@given(small_floats)
+@given(st.floats(allow_infinity=False, allow_nan=False))
 def test_sigmoid(a: float) -> None:
-    """Check properties of the sigmoid function, specifically
-    * It is always between 0.0 and 1.0.
-    * one minus sigmoid is the same as sigmoid of the negative
-    * It crosses 0 at 0.5
-    * It is  strictly increasing.
     """
-    # TODO: Implement for Task 0.2.
-    raise NotImplementedError("Need to implement for Task 0.2")
+    Check properties of the sigmoid function, specifically:
+    * It is always between 0.0 and 1.0.
+    * One minus sigmoid(a) is the same as sigmoid of the negative (-a).
+    * It is strictly increasing.
+
+    Args:
+        a (float): Input to the sigmoid function.
+    """
+    sigmoid_a = sigmoid(a)
+    sigmoid_neg_a = sigmoid(-a)
+
+    # It is always between 0.0 and 1.0.
+    assert 0.0 <= sigmoid_a <= 1.0, "Sigmoid output should be within [0, 1]"
+
+    # One minus sigmoid(a) is the same as sigmoid of the negative (-a).
+    assert (
+        abs((1.0 - sigmoid_a) - sigmoid_neg_a) < 1e-7
+    ), "One minus sigmoid(a) should equal sigmoid(-a)"
+
+    # It crosses 0.5 at a = 0
+    if a == 0:
+        assert abs(sigmoid_a - 0.5) < 1e-7, "Sigmoid(0) should be 0.5"
+
+    # It is strictly increasing (this checks for two random values, where b > a)
+    b = a + abs(
+        st.floats(min_value=1e-7, max_value=10.0).example()
+    )  # generate a positive offset
+    sigmoid_b = sigmoid(b)
+    assert sigmoid_b > sigmoid_a, "Sigmoid should be strictly increasing"
 
 
 @pytest.mark.task0_2
 @given(small_floats, small_floats, small_floats)
 def test_transitive(a: float, b: float, c: float) -> None:
-    "Test the transitive property of less-than (a < b and b < c implies a < c)"
-    # TODO: Implement for Task 0.2.
-    raise NotImplementedError("Need to implement for Task 0.2")
+    """
+    Test the transitive property of less-than using the `lt` function.
+
+    This test checks that if `lt(a, b)` and `lt(b, c)` both indicate true (1.0),
+    then `lt(a, c)` should also indicate true (1.0).
+
+    Args:
+        a (float): First floating-point number.
+        b (float): Second floating-point number.
+        c (float): Third floating-point number.
+    """
+    if lt(a, b) == 1.0 and lt(b, c) == 1.0:
+        assert (
+            lt(a, c) == 1.0
+        ), "Transitive property failed (lt(a, b) and lt(b, c) should imply lt(a, c))"
 
 
 @pytest.mark.task0_2
-def test_symmetric() -> None:
+@given(small_floats, small_floats)
+def test_symmetric(a: float, b: float) -> None:
     """
-    Write a test that ensures that :func:`minitorch.operators.mul` is symmetric, i.e.
-    gives the same value regardless of the order of its input.
+    Test that multiplication is symmetric, meaning that the order of operands does not change the result.
+
+    Args:
+        a (float): First operand.
+        b (float): Second operand.
     """
-    # TODO: Implement for Task 0.2.
-    raise NotImplementedError("Need to implement for Task 0.2")
+    assert mul(a, b) == mul(
+        b, a
+    ), "Multiplication failed to be symmetric with inputs {}, {}".format(a, b)
 
 
 @pytest.mark.task0_2
-def test_distribute() -> None:
-    r"""
-    Write a test that ensures that your operators distribute, i.e.
-    :math:`z \times (x + y) = z \times x + z \times y`
+@given(small_floats, small_floats, small_floats)
+def test_distribute(x: float, y: float, z: float) -> None:
     """
-    # TODO: Implement for Task 0.2.
-    raise NotImplementedError("Need to implement for Task 0.2")
+    Test the distributive property of multiplication over addition.
+
+    This test checks the distributive property, specifically verifying that:
+    z * (x + y) == z * x + z * y
+
+    Args:
+        x (float): First operand for addition.
+        y (float): Second operand for addition.
+        z (float): Operand for multiplication.
+    """
+    # Compute both sides of the distributive property
+    left_side = mul(z, add(x, y))
+    right_side = add(mul(z, x), mul(z, y))
+
+    # Assert that both sides are equal
+    assert is_close(
+        left_side, right_side
+    ), f"Distributive property failed for values x={x}, y={y}, z={z}"
 
 
 @pytest.mark.task0_2
-def test_other() -> None:
+@given(small_floats)
+def test_multiplicative_identity(a: float) -> None:
     """
-    Write a test that ensures some other property holds for your functions.
+    Test the multiplicative identity property of the multiplication function.
+
+    This test checks that any number multiplied by 1 returns the number itself, validating:
+    a * 1 = a
+
+    Args:
+        a (float): A floating-point number to test the multiplicative identity property.
     """
-    # TODO: Implement for Task 0.2.
-    raise NotImplementedError("Need to implement for Task 0.2")
+    # Multiplying by 1 should return the number itself
+    assert mul(a, 1) == a, f"Multiplicative identity failed for a = {a}"
 
 
 # ## Task 0.3  - Higher-order functions
